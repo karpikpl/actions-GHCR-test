@@ -32,6 +32,13 @@ jobs:
             core.info(`Latest release tag: ${latestRelease.data.tag_name}`);
             core.setOutput('tag_name', latestRelease.data.tag_name);
 
+      - name: Show Latest Release Tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.info('Latest release tag (result): ${{ steps.get_latest_release.outputs.result }}');
+            core.info('Latest release tag (tag_name): ${{ steps.get_latest_release.outputs.tag_name }}');
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
