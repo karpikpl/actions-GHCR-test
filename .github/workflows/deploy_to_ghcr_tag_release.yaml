@@ -22,6 +22,7 @@ jobs:
     steps:
       - name: Checkout GitHub Action
         uses: actions/checkout@v4
+        ref: ${{ github.event.release.tag_name }}
 
       - name: Update version in package.json
         id: version
