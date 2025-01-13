@@ -2,4 +2,4 @@ FROM alpine:latest
 
 ENV APP=ui
 
-CMD ["echo", "Hello from the UI container! V1.1"]
+CMD ["echo", "Hello from the UI container! V1.2-preview"]

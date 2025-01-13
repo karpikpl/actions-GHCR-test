@@ -1,4 +1,5 @@
 name: Build and push Docker image with custom tag
+# NOTE: this pipeline is not needed as images are pushed after release
 
 on:
   workflow_dispatch:
