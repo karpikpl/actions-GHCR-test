@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag for the Docker image'
+        description: 'git tag to be used as tag for the Docker image e.g. v1.9.0'
         required: true
-        default: 'latest'
+        default: 'v1.x.x'
 
 permissions:
   packages: write
@@ -18,10 +18,8 @@ jobs:
       - name: Checkout GitHub Action
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history for all tags and branches
-
-      - name: Checkout specific tag
-        run: git checkout tags/v${{ github.event.inputs.tag }}
+          # fetch-depth: 0  # Fetch all history for all tags and branches
+          ref: ${{ github.event.inputs.tag }}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -55,3 +53,58 @@ jobs:
           annotations: ${{ steps.meta.outputs.annotations }}
           labels: ${{ steps.meta.outputs.labels }}
           push: true
+
+  push_proxy_to_ghcr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GitHub Action
+        uses: actions/checkout@v4
+        with:
+          # fetch-depth: 0  # Fetch all history for all tags and branches
+          ref: ${{ github.event.inputs.tag }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Latest Release Tag
+        id: get_latest_release
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const latestRelease = await github.rest.repos.getLatestRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            core.setOutput('tag_name', latestRelease.data.tag_name);
+          
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository }}-api
+          labels: |
+            org.opencontainers.image.title=my-app-api
+            org.opencontainers.image.description=This is my awesome app
+            org.opencontainers.image.source=${{ github.repository }}
+          tags: |
+            type=raw,enable=true,priority=1,value=${{ steps.get_latest_release.outputs.result }}
+            type=sha
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Build and push api
+        uses: docker/build-push-action@v5
+        with:
+          file: api.Dockerfile
+          context: .
+          tags: ${{ steps.meta.outputs.tags }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          labels: ${{ steps.meta.outputs.labels }}
+          push: true
+        
