@@ -1,4 +1,7 @@
 name: Build and push Docker image with release tag
+# Tags should follow correct semver versioning. See https://semver.org/
+# For release tag, use the following format: vX.Y.Z
+# For preview tag, use the following format: vX.Y.Z-preview
 
 on:
   

@@ -25,6 +25,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+# Adding would tag any push to main as "lastest"
+# type=raw,value=latest,enable={{is_default_branch}}
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v4
@@ -35,7 +37,6 @@ jobs:
             org.opencontainers.image.description=Metrics viewer for GitHub Copilot usage
             org.opencontainers.image.source=${{ github.repository }}
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
             type=sha
             type=ref,event=branch
             type=ref,event=pr
@@ -64,6 +65,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Adding would tag any push to main as "lastest"
+      # type=raw,value=latest,enable={{is_default_branch}}
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v4
@@ -74,7 +77,6 @@ jobs:
             org.opencontainers.image.description=Metrics viewer for GitHub Copilot usage
             org.opencontainers.image.source=${{ github.repository }}
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
             type=sha
             type=ref,event=branch
             type=ref,event=pr
