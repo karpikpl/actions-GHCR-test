@@ -22,7 +22,8 @@ jobs:
     steps:
       - name: Checkout GitHub Action
         uses: actions/checkout@v4
-        ref: main
+        with:
+          ref: main
 
       - name: Update version in package.json
         id: version
