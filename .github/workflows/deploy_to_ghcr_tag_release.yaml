@@ -26,6 +26,8 @@ jobs:
           ref: main
           fetch-depth: 0
 
+      - uses: actions4git/setup-git@v1
+
       - name: Update version in package.json
         id: version
         run: |
