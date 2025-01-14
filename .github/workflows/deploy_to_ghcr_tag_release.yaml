@@ -40,7 +40,7 @@ jobs:
           git checkout main
           git merge temp-$version
           git tag --force $version
-          git push --tags
+          git push -f --tags
 
   push_to_ghcr:
     runs-on: ubuntu-latest
