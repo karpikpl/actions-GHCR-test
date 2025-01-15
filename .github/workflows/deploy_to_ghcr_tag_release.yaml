@@ -44,6 +44,7 @@ jobs:
             git add .
             git commit --signoff --message $version
             git tag --force $version
+            git push origin $version --force
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
