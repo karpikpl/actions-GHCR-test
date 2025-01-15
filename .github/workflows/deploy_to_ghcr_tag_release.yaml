@@ -34,7 +34,7 @@ jobs:
             version=$(npm version from-git --no-git-tag-version)
             echo "NPM version is $version"
 
-            if [ "${{ github.event.release.tag_name }}" != "v$version" ]; then
+            if [ "${{ github.event.release.tag_name }}" != "$version" ]; then
               echo "Release tag does not match the expected version."
               exit 1
             fi
